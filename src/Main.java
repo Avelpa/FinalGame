@@ -13,7 +13,7 @@ public class Main extends JComponent implements KeyListener{
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
     
-    Level[] games = {new MainGame("level1.png", "level1Background.png")};
+    Level[] games = {new MainGame("images\\level1.png", "images\\level1Background.png")};
     int level = 0;
     
     // sets the framerate and delay for our game
