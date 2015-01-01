@@ -22,11 +22,10 @@ public abstract class Level {
     
     int camx;
     int initialOffset = 0;
-    boolean right;
     
     BufferedImage background;
     BufferedImage objects;
-    ArrayList<Drawables> drawables = new ArrayList<>();
+    ArrayList<Drawables> drawables;
     int[][] map;
     
     public Level(String oI, String bI)
@@ -37,6 +36,7 @@ public abstract class Level {
     
     public void initializeMap()
     {
+        drawables = new ArrayList();
         try
         {
             background = ImageHelper.loadImage(backgroundName);
@@ -49,6 +49,7 @@ public abstract class Level {
         }
         fillMap();
         findRect(map);
+        
         
         generateLevel();
     }

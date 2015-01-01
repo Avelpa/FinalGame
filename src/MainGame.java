@@ -28,9 +28,6 @@ public class MainGame extends Level{
     public void generateLevel() {
         initialOffset = -2;
         camx = initialOffset;
-        right = true;
-        p.width = 10;
-        p.height = 10;
     }
 
     @Override
