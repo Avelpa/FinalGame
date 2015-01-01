@@ -73,36 +73,6 @@ public class MainGame extends Level{
     @Override
     public void update() {
         p.update(w, a, d, blocks);
-        
-        /*
-        if (right)
-        {
-            if (p.x - camx >= Main.WIDTH/2)
-            {
-                if (camx + background.getWidth() - Main.WIDTH > 0)
-                {
-                    camx -= p.getXspd();
-                    p.x = Main.WIDTH/2 - camx;
-                }
-                else
-                {
-                    camx = Main.WIDTH - background.getWidth();
-                    right = false;
-                }
-            }
-            else
-            {
-                camx = -2;
-            }
-        }
-        if (!right)
-        {
-            if (p.x + camx < Main.WIDTH/2)
-            {
-                camx -= p.getXspd();
-                right = true;
-            }
-        }*/
         if (p.x - camx > Main.WIDTH/2)
         {
             if (background.getWidth() + camx - Main.WIDTH > 0)
