@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,7 +28,15 @@ public class MainGame extends Level{
     @Override
     public void generateLevel() {
         initialOffset = -2;
-        camx = initialOffset;
+        
+        if (p.x > Main.WIDTH/2)
+        {
+            camx = Main.WIDTH/2 - p.x;
+        }
+        else
+        {
+            camx = initialOffset;
+        }
     }
 
     @Override
@@ -80,13 +89,16 @@ public class MainGame extends Level{
             {
                 camx -= p.getXspd();
             }
+            else
+            {
+                camx = Main.WIDTH - background.getWidth();
+            }
         }
         else
         {
-            
             camx = initialOffset;
         }
-        
+        deleteBlocks();
 
     }
 
@@ -105,6 +117,11 @@ public class MainGame extends Level{
         if (id == 3) // trampoline
         {
             blocks.add(new BouncyMain(dimensions[0], dimensions[1], dimensions[2], dimensions[3], Color.BLACK));
+        }
+        if (id == 4) // LargePotion
+        {
+            blocks.add(new LargePotion(dimensions[0], dimensions[1], dimensions[2], dimensions[3], "images\\largePotion.png"));
+            drawables.add(blocks.get(blocks.size()-1));
         }
     }
 
@@ -127,15 +144,34 @@ public class MainGame extends Level{
                 {
                     map[y][x] = 3;
                 }
-                /*
+                
                 if (objects.getRGB(x, y) == -4856291) // (34, 177, 76) large potion
                 {
                     map[y][x] = 4;
                 }
+                /*
                 if (objects.getRGB(x, y) == -6694422) // (153, 217, 234) small potion
                 {
                     map[y][x] = 5;
                 }*/
+            }
+        }
+    }
+    
+    private void deleteBlocks()
+    {
+        Iterator<ObstacleMain> it = blocks.iterator();
+        while (it.hasNext())
+        {
+            ObstacleMain next = it.next();
+            if (next.toDelete)
+            {
+                
+                if (drawables.contains(next))
+                {
+                    drawables.remove(next);
+                }
+                it.remove();
             }
         }
     }

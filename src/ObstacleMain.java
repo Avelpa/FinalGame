@@ -1,16 +1,34 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 
 public class ObstacleMain extends Rectangle implements Drawables{
     
     private Color c;
+    private BufferedImage sprite;
+    protected boolean toDelete = false;
     
     public ObstacleMain(int x, int y, int width, int height, Color c)
     {
         super(x, y, width ,height);
         this.c = c;
+    }
+    public ObstacleMain(int x, int y, int width, int height, String spriteName)
+    {
+        super(x, y, width ,height);
+        c = null;
+        try
+        {
+            sprite = ImageHelper.loadImage(spriteName);
+            sprite = ImageHelper.resize(sprite, width, height);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error Loading ObstacleMain sprite");
+            throw e;
+        }
     }
     
     public void collideX(PlayerMain p)
@@ -43,8 +61,15 @@ public class ObstacleMain extends Rectangle implements Drawables{
     @Override
     public void draw(Graphics g, int camx)
     {
-        g.setColor(c);
-        g.fillRect(x + camx, y, width ,height);
+        if (c != null)
+        {
+            g.setColor(c);
+            g.fillRect(x + camx, y, width ,height);
+        }
+        else
+        {
+            g.drawImage(sprite, x+camx, y, null);
+        }
     }
     
 }

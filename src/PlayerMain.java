@@ -22,12 +22,14 @@ public class PlayerMain extends Rectangle implements Drawables{
     private double yspd = 0;
     private double xspd;
     private double walkSpeed = 3;
+    
     private boolean onGround = false;
     
     public PlayerMain(int x, int y, int width, int height, Color c)
     {
         super(x, y, width, height);
         this.c = c;
+        //walkSpeed = 6;
     }
     
     public void update(boolean w, boolean a, boolean d, ArrayList<ObstacleMain>... ObstacleMains)
@@ -80,6 +82,7 @@ public class PlayerMain extends Rectangle implements Drawables{
         onGround = false;
         jumpSpeed = -5;
         
+        collisionloop:
         for (int i = 0; i < Math.abs(yspd); i++)
         {
             y += yspd/Math.abs(yspd);
@@ -90,6 +93,7 @@ public class PlayerMain extends Rectangle implements Drawables{
                     if (this.intersects(o))
                     {
                         o.collideY(this);
+                        break collisionloop;
                     }
                 }
             }
