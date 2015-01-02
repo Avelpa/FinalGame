@@ -16,7 +16,7 @@ import java.util.Iterator;
  */
 public class MainGame extends Level{
     
-    ArrayList<ObstacleMain> blocks = new ArrayList<>();
+    ArrayList<ObstacleMain> blocks;
     PlayerMain p;
     boolean w, a, d;
     
@@ -27,7 +27,12 @@ public class MainGame extends Level{
     
     @Override
     public void generateLevel() {
+        
         initialOffset = -2;
+        blocks = new ArrayList();
+        
+        fillMap();
+        findRect(map);
         
         if (p.x > Main.WIDTH/2)
         {
@@ -99,7 +104,7 @@ public class MainGame extends Level{
             camx = initialOffset;
         }
         deleteBlocks();
-
+        System.out.println(p.width);
     }
 
     @Override
@@ -121,6 +126,11 @@ public class MainGame extends Level{
         if (id == 4) // LargePotion
         {
             blocks.add(new LargePotion(dimensions[0], dimensions[1], dimensions[2], dimensions[3], "images\\largePotion.png"));
+            drawables.add(blocks.get(blocks.size()-1));
+        }
+        if (id == 5) // SmallPotion
+        {
+            blocks.add(new SmallPotion(dimensions[0], dimensions[1], dimensions[2], dimensions[3], "images\\smallPotion.png"));
             drawables.add(blocks.get(blocks.size()-1));
         }
     }
@@ -149,11 +159,10 @@ public class MainGame extends Level{
                 {
                     map[y][x] = 4;
                 }
-                /*
                 if (objects.getRGB(x, y) == -6694422) // (153, 217, 234) small potion
                 {
                     map[y][x] = 5;
-                }*/
+                }
             }
         }
     }

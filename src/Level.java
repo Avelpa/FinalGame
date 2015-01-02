@@ -47,9 +47,6 @@ public abstract class Level {
             System.out.println("Error loading level image");
             throw e;
         }
-        fillMap();
-        findRect(map);
-        
         
         generateLevel();
     }

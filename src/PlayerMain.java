@@ -58,10 +58,13 @@ public class PlayerMain extends Rectangle implements Drawables{
                 {
                     for (ObstacleMain o: os)
                     {
-                        if (this.intersects(o))
+                        if (!o.toDelete)
                         {
-                            o.collideX(this);
-                            break collisionloop;
+                            if (this.intersects(o))
+                            {
+                                o.collideX(this);
+                                break collisionloop;
+                            }
                         }
                     }
                 }
@@ -90,10 +93,13 @@ public class PlayerMain extends Rectangle implements Drawables{
             {
                 for (ObstacleMain o: os)
                 {
-                    if (this.intersects(o))
+                    if (!o.toDelete)
                     {
-                        o.collideY(this);
-                        break collisionloop;
+                        if (this.intersects(o))
+                        {
+                            o.collideY(this);
+                            break collisionloop;
+                        }
                     }
                 }
             }
