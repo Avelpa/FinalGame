@@ -18,10 +18,12 @@ public class PlayerMain extends Rectangle implements Drawables{
     
     private Color c;
     private double grav = 0.2;
-    private int jumpSpeed;
+    private int jumpSpeed; // = 5
     private double yspd = 0;
     private double xspd;
     private double walkSpeed = 3;
+    
+    private boolean key = false;
     
     private boolean onGround = false;
     
@@ -29,7 +31,7 @@ public class PlayerMain extends Rectangle implements Drawables{
     {
         super(x, y, width, height);
         this.c = c;
-        //walkSpeed = 6;
+        
     }
     
     public void update(boolean w, boolean a, boolean d, ArrayList<ObstacleMain>... ObstacleMains)
@@ -58,11 +60,10 @@ public class PlayerMain extends Rectangle implements Drawables{
                 {
                     for (ObstacleMain o: os)
                     {
-                        if (!o.toDelete)
+                        if (this.intersects(o))
                         {
-                            if (this.intersects(o))
+                            if (o.collideX(this))
                             {
-                                o.collideX(this);
                                 break collisionloop;
                             }
                         }
@@ -93,11 +94,10 @@ public class PlayerMain extends Rectangle implements Drawables{
             {
                 for (ObstacleMain o: os)
                 {
-                    if (!o.toDelete)
+                    if (this.intersects(o))
                     {
-                        if (this.intersects(o))
+                        if (o.collideY(this))
                         {
-                            o.collideY(this);
                             break collisionloop;
                         }
                     }
@@ -108,12 +108,17 @@ public class PlayerMain extends Rectangle implements Drawables{
     }
     
     @Override
-    public void draw(Graphics g, int camx)
+    public void draw(Graphics g, int camx, int camy)
     {
         g.setColor(c);
-        g.fillRect(x + camx, y, width, height);
+        g.fillRect(x + camx, y + camy, width, height);
     }
 
+    public void setGrav(double grav)
+    {
+        this.grav = grav;
+    }
+    
     public double getYspd() {
         return yspd;
     }
@@ -125,7 +130,7 @@ public class PlayerMain extends Rectangle implements Drawables{
     public void setOnGround(boolean onGround) {
         this.onGround = onGround;
     }
-
+    
     public void setJumpSpeed(int jumpSpeed) {
         this.jumpSpeed = jumpSpeed;
     }
@@ -141,7 +146,13 @@ public class PlayerMain extends Rectangle implements Drawables{
     public void setWalkSpeed(double walkSpeed) {
         this.walkSpeed = walkSpeed;
     }
-    
-    
-    
+
+    public boolean hasKey()
+    {
+        return key;
+    }
+    public void setKey(boolean key)
+    {
+        this.key = key;
+    }
 }

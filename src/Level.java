@@ -1,32 +1,23 @@
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author Dmitry
- */
 public abstract class Level {
     
-    boolean on = false;
-    String backgroundName, objectsName;
+    boolean restartable = true;
+    boolean on = false; // used to judge initialiseLevel time
+    String backgroundName, objectsName; // paths to images
     
-    int camx;
-    int initialOffset = 0;
+    int camx, camy; 
+    int initialOffsetX = 0; // initial camera offset X
+    int initialOffsetY = 0; // initla camera offset Y
     
     BufferedImage background;
     BufferedImage objects;
-    ArrayList<Drawables> drawables;
-    int[][] map;
+    static ArrayList<Drawables> drawables; // list of all the drawable objects in the game (implement Drawables)
+    int[][] map; // the pixel map that will be processed by the map reader
     
     public Level(String oI, String bI)
     {
@@ -34,7 +25,7 @@ public abstract class Level {
         this.backgroundName = bI;
     }
     
-    public void initializeMap()
+    public void initializeMap() // run first time map starts
     {
         drawables = new ArrayList();
         try
@@ -48,7 +39,7 @@ public abstract class Level {
             throw e;
         }
         
-        generateLevel();
+        generateLevel(); // generate level-specific stuff
     }
     
     public void run()
@@ -65,23 +56,23 @@ public abstract class Level {
     {
         if (background != null)
         {
-            g.drawImage(background, camx, 0, null);
+            g.drawImage(background, camx, camy, null);
         }
         if (drawables.size() > 0)
         {
             for (Drawables d: drawables)
             {
-                d.draw(g, camx);
+                d.draw(g, camx, camy); // once again, since drawable objects implement Drawables, drawing is very easy
             }
         }
     }
-    public abstract void keyPress(KeyEvent e);
+    public abstract void keyPress(KeyEvent e); // used to obtain keyPresses from the Main class
     
-    public abstract void keyRelease(KeyEvent e);
+    public abstract void keyRelease(KeyEvent e); // used to obtain keyReleases from the Main class
     
-    public abstract void generateLevel();
+    public abstract void generateLevel(); // generates level-specific stuff
     
-    public abstract void update();
+    public abstract void update(); // run every loop
     
     // MAP GENERATION
     
@@ -97,11 +88,12 @@ public abstract class Level {
             {
                 if (map[y][x] != 0)
                 {
-                    dimensions = getRect(map, x, y, map[y][x]);
+                    dimensions = getRect(map, x, y, map[y][x]); // [x, y, width, height, "pixel]
                     
-                    addBlocks(dimensions);
+                    addBlocks(dimensions); // this is level specific. it adds all the right integer "pixels" to the map
+                    // based on the requriements of each level itself
 
-                    x += dimensions[2];
+                    x += dimensions[2]; // += width of previous block
                     
                 }
             }
@@ -111,7 +103,7 @@ public abstract class Level {
     public int[] getRect(int[][] map, int refX, int refY, int target)
     {
         int limitX = map[refY].length, limitY = map.length;
-        int w = 0, h = 0, refW = 0;
+        int w = 0, h = 0, refW = 0; // w = width of block, h = height of block, refW = explained in its usage
         boolean wDone = false, scanning = false;
         
         for (int y = refY; y < limitY; y++)
@@ -119,68 +111,64 @@ public abstract class Level {
             for (int x = refX; x < limitX; x++)
             {
                 
-                if (map[y][x] == target)
+                if (map[y][x] == target) // target is the "pixel" identifier
                 {
-                    scanning = true;
+                    scanning = true; // scannign means inside black
                     // if width unkown, add width
-                    if (!wDone)
+                    if (!wDone) // if width is still undetermined
                     {
                         w++;
                     }
-                    // add reference width anyways
+                    // add reference width regardless of whether width is known or not
                     refW++;
-                    if (x == limitX-1 && y == limitY-1)
+                    if (x == limitX-1 && y == limitY-1) // if reach bottom of screen/scan
                     {
-                        int[] dimensions = {refX, refY, w, h+1, target};
                         map[y][x] = 0;
-                        return dimensions;
+                        return new int[] {refX, refY, w, h+1, target};
                     }
                     
                     // erase pixel
                     map[y][x] = 0;
                 }
                 
-                else if (map[y][x] != target)
+                else if (map[y][x] != target) // if pixel is 0
                 {
-                    // if first out of bounds
+                    // if previous pixel was target
                     if (scanning)
                     {
-                        if (!wDone)
+                        if (!wDone) // since previous was target and width is undefined, it's now defined
                         {
                             wDone = true;
                         }
-                        // IMPORTANT  -- FILL --- EXCEPTION CASE
                         else
                         {
-                            if (refW < w)
+                            if (refW < w) // used case1
                             {
                                 for (int i = 1; i < refW+1; i++)
                                 {
-                                    map[y][x-i] = target;
+                                    map[y][x-i] = target; // rollsback the scanning, changes it back to target
                                 }
-                                int[] dimensions = {refX, refY, w, h, target};
-                                return dimensions;
+                                //int[] dimensions = {refX, refY, w, h, target};
+                                return new int[] {refX, refY, w, h, target};
                             }
                         }
                         
                         //BOTTOM LINE
-                        if (y < limitY-1)
+                        if (y < limitY-1) // makes sure scan doesn't go out of bounds since refY is map.length
                         {
                             y++;
                         }
                         else
                         {
-                            int[] dimensions = {refX, refY, w, h+1, target};
-                            return dimensions;
+                            return new int[] {refX, refY, w, h+1, target};
                         }
                         limitX = x;
-                        x = refX - 1; // -1 cause loop x++;
+                        x = refX - 1; // resets the scan, makes x = -1 cause loop x++;
                     }
                     
                     else if (!scanning)
                     {
-                        int[] dimensions = {refX, refY, w, h, target};
-                        return dimensions;
+                        return new int[] {refX, refY, w, h, target};
                     }
                     scanning = false;
                     refW = 0;
@@ -188,6 +176,8 @@ public abstract class Level {
                     
                 }
             }
+            
+            // takes care of horizontal scan
             if (scanning)
             {
                 wDone = true;
@@ -198,8 +188,12 @@ public abstract class Level {
         }
         
         return null;
+        
+        // this entire method is not well structured, but contructing the map scanner recursively proved too hard
+        // I will improve on this in the future
     }
     
-    public abstract void addBlocks(int[] dimensions);
+    public abstract void addBlocks(int[] dimensions); // based on the blocks' "id" (1, 2, 3....) adds the appropriate
+                                                        // in-game object (ie. door, obstacle, bouncy obstacle...)
     
 }

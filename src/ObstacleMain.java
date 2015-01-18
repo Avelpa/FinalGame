@@ -7,18 +7,25 @@ import java.awt.image.BufferedImage;
 public class ObstacleMain extends Rectangle implements Drawables{
     
     private Color c;
-    private BufferedImage sprite;
-    protected boolean toDelete = false;
+    protected boolean solidCeiling;
+    protected BufferedImage sprite;
     
-    public ObstacleMain(int x, int y, int width, int height, Color c)
+    public ObstacleMain(int x, int y, int width, int height, Color c, boolean solidCeiling)
     {
         super(x, y, width ,height);
         this.c = c;
+        this.solidCeiling = solidCeiling; // whether the player can jump through the block or not (up)
     }
-    public ObstacleMain(int x, int y, int width, int height, String spriteName)
+    public ObstacleMain(int x, int y, int width, int height, boolean solidCeiling)
+    {
+        super(x, y, width ,height);
+        this.solidCeiling = solidCeiling;
+    }
+    public ObstacleMain(int x, int y, int width, int height, String spriteName, boolean solidCeiling)
     {
         super(x, y, width ,height);
         c = null;
+        this.solidCeiling = solidCeiling;
         try
         {
             sprite = ImageHelper.loadImage(spriteName);
@@ -31,45 +38,69 @@ public class ObstacleMain extends Rectangle implements Drawables{
         }
     }
     
-    public void collideX(PlayerMain p)
+    public boolean collideX(PlayerMain p) // if the collision should be solid (the player must be pushed back) return true
+                                        // else return false
     {
-        if (p.getXspd() > 0)
+        if (solidCeiling)
         {
-            p.x -= this.intersection(p).width;
+            if (p.getXspd() > 0)
+            {
+                p.x -= this.intersection(p).width;
+            }
+            else if (p.getXspd() < 0)
+            {
+                p.x += this.intersection(p).width;
+            }
+            p.setXspd(0);
         }
-        else if (p.getXspd() < 0)
+        else
         {
-            p.x += this.intersection(p).width;
+            return false;
         }
-        p.setXspd(0);
+        return true;
     }
     
-    public void collideY(PlayerMain p)
+    public boolean collideY(PlayerMain p) // same stuff as above
     {
         if (p.getYspd() > 0)
         {
             p.y -= this.intersection(p).height;
             p.setOnGround(true);
+            p.setYspd(0);
         }
         else if (p.getYspd() < 0)
         {
-            p.y += this.intersection(p).height;
+            if (solidCeiling)
+            {
+                p.y += this.intersection(p).height;
+                p.setYspd(0);
+            }
+            else
+            {
+                return false;
+            }
         }
-        p.setYspd(0);
+        return true;
+        
+    }
+    
+    public void deleteThis() // delete the block from both blocks and drawables
+    {
+        MainGame.blocks.remove(this);
+        MainGame.drawables.remove(this);
     }
     
     @Override
-    public void draw(Graphics g, int camx)
+    public void draw(Graphics g, int camx, int camy)
     {
         if (c != null)
         {
             g.setColor(c);
-            g.fillRect(x + camx, y, width ,height);
+            g.fillRect(x + camx, y + camy, width ,height);
         }
         else
         {
-            g.drawImage(sprite, x+camx, y, null);
+            g.drawImage(sprite, x+camx, y + camy, null);
         }
     }
-    
 }

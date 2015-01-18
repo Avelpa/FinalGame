@@ -8,33 +8,23 @@
  *
  * @author Dmitry
  */
-public class SmallPotion extends ObstacleMain{
-    public SmallPotion(int x, int y, int width, int height, String sprite)
+public class Key extends ObstacleMain{
+    public Key(int x, int y, int width, int height, String sprite)
     {
-        super(x, y, width, height, sprite, true);
+        super (x, y, width, height, sprite, true);
     }
-    
-    @Override 
+    @Override
     public boolean collideX(PlayerMain p)
     {
-        p.x -= p.width/2;
-        p.y -= p.height/2;
-        p.width *= 2;
-        p.height *= 2;
+        p.setKey(true);
         deleteThis();
         return true;
     }
-    
-    @Override 
+    @Override
     public boolean collideY(PlayerMain p)
     {
-        p.x -= p.width/2;
-        p.y -= p.height/2;
-        p.width *= 2;
-        p.height *= 2;
+        p.setKey(true);
         deleteThis();
         return true;
     }
-    
-    
 }

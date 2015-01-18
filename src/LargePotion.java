@@ -11,27 +11,30 @@
 public class LargePotion extends ObstacleMain{
     public LargePotion(int x, int y, int width, int height, String sprite)
     {
-        super(x, y, width, height, sprite);
+        super(x, y, width, height, sprite, true);
     }
     
     @Override 
-    public void collideX(PlayerMain p)
+    public boolean collideX(PlayerMain p) // shrinks player
     {
         p.width /= 2;
         p.height /= 2;
         p.x += p.width/2;
         p.y += p.height/2;
-        toDelete = true;
+        deleteThis();
+        return true; // unfortunately the way it's structured i can't return false after deleteThis()
+                    // FORTUNATELY since deleteThis() is called this block is not called the next tick
     }
     
     @Override 
-    public void collideY(PlayerMain p)
+    public boolean collideY(PlayerMain p)
     {
         p.width /= 2;
         p.height /= 2;
         p.x += p.width/2;
         p.y += p.height/2;
-        toDelete = true;
+        deleteThis();
+        return true;
     }
     
     

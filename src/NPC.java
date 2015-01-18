@@ -1,5 +1,5 @@
 
-import java.awt.Graphics;
+import java.awt.Rectangle;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,8 +11,9 @@ import java.awt.Graphics;
  *
  * @author Dmitry
  */
-public interface Drawables {
-    
-    // just an easier way to organize the drawable objects to send them to the Main class to be drawed
-    public void draw(Graphics g, int camx, int camy);
+public class NPC extends Rectangle{
+    public NPC(int x, int y, int width, int height)
+    {
+        super(x, y, width, height);
+    }
 }

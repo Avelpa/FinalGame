@@ -1,26 +1,32 @@
-import java.awt.Color;
 
 public class BouncyMain extends ObstacleMain{
     
-    public BouncyMain(int x, int y, int width, int height, Color c)
+    public BouncyMain(int x, int y, int width, int height, boolean solidCeiling)
     {
-        super(x, y, width ,height, c);
+        super(x, y, width ,height, solidCeiling);
     }
     
     @Override
-    public void collideY(PlayerMain p)
+    public boolean collideY(PlayerMain p)
     {
         if (p.getYspd() > 0)
         {
             p.y -= this.intersection(p).height;
-            p.setOnGround(true);
-            p.setJumpSpeed(-9);
+            p.setYspd(-10);
         }
         else if (p.getYspd() < 0)
         {
-            p.y += this.intersection(p).height;
+            if (solidCeiling)
+            {
+                p.y += this.intersection(p).height;
+                p.setYspd(0);
+            }
+            else
+            {
+                return false;
+            }
         }
-        p.setYspd(0);
+        return true;
     }
     
     
