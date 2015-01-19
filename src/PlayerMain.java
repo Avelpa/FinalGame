@@ -111,7 +111,25 @@ public class PlayerMain extends Rectangle implements Drawables{
     public void draw(Graphics g, int camx, int camy)
     {
         g.setColor(c);
-        g.fillRect(x + camx, y + camy, width, height);
+        if (onGround)
+        {
+            if (xspd == 0)
+            {
+                g.fillRect(x + camx, y + camy, width, height);
+            }
+            else if (xspd > 0)
+            {
+                g.fillPolygon(new int[] {x + camx, x + camx, x + width + camx}, new int[] {y + camy, y + height + camy, y + height/2 + camy}, 3);
+            }
+            else
+            {
+                g.fillPolygon(new int[] {x + camx, x + width + camx, x + width + camx}, new int[] {y + height/2 + camy, y + height + camy, y + camy}, 3);
+            }
+        }
+        else
+        {
+            g.fillOval(x + camx, y + camy, width, height);
+        }
     }
 
     public void setGrav(double grav)

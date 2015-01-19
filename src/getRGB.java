@@ -11,6 +11,6 @@ import java.awt.Color;
 public class getRGB {
     public static void main(String[] args)
     {
-        System.out.println(new Color(127, 127, 127).getRGB());
+        System.out.println(new Color(200, 191, 231).getRGB());
     }
 }

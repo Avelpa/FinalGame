@@ -38,21 +38,20 @@ public class MainGame extends Level{
         fillMap();
         findRect(map);
         
-        
     }
 
     @Override
     public void keyPress(KeyEvent e)
     {
-        if (Character.toLowerCase(e.getKeyChar()) == 'w' || e.getKeyCode() == KeyEvent.VK_UP)
+        if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP)
         {
             w = true;
         }
-        if (Character.toLowerCase(e.getKeyChar()) == 'a' || e.getKeyCode() == KeyEvent.VK_LEFT)
+        if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT)
         {
             a = true;
         }
-        if (Character.toLowerCase(e.getKeyChar()) == 'd' || e.getKeyCode() == KeyEvent.VK_RIGHT)
+        if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT)
         {
             d = true;
         }
@@ -60,15 +59,15 @@ public class MainGame extends Level{
     @Override
     public void keyRelease(KeyEvent e)
     {
-        if (Character.toLowerCase(e.getKeyChar()) == 'w' || e.getKeyCode() == KeyEvent.VK_UP)
+        if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP)
         {
             w = false;
         }
-        if (Character.toLowerCase(e.getKeyChar()) == 'a' || e.getKeyCode() == KeyEvent.VK_LEFT)
+        if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT)
         {
             a = false;
         }
-        if (Character.toLowerCase(e.getKeyChar()) == 'd' || e.getKeyCode() == KeyEvent.VK_RIGHT)
+        if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT)
         {
             d = false;
         }
@@ -155,6 +154,14 @@ public class MainGame extends Level{
         {
             blocks.add(new EndLevel(dimensions[0], dimensions[1], dimensions[2], dimensions[3]));
         }
+        if (id == 9) // cloud
+        {
+            drawables.add(new Sprite(dimensions[0], dimensions[1], dimensions[2], dimensions[3], "images\\cloud3.png", 4, 2, 360));
+        }
+        if (id == 10) // flower
+        {
+            drawables.add(0,new Sprite(dimensions[0], dimensions[1], dimensions[2], dimensions[3], "images\\flower.png", 12, 11, 1000));
+        }
     }
 
     @Override
@@ -196,6 +203,14 @@ public class MainGame extends Level{
                 if (objects.getRGB(x, y) == -1055568) // (239, 228, 176) end level
                 {
                     map[y][x] = 8;
+                }
+                if (objects.getRGB(x, y) == -6075996) // (163, 73, 164) cloud
+                {
+                    map[y][x] = 9;
+                }
+                if (objects.getRGB(x, y) == -3620889) // (200, 191, 231) flower
+                {
+                    map[y][x] = 10;
                 }
                 
             }

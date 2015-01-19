@@ -24,8 +24,8 @@ public class Main extends JComponent implements KeyListener{
     new MainGame3("images\\level3.png", "images\\level3Background.png"),
     new MainGame2("images\\level4.png", "images\\level4Background.png"),
     new MainGame("images\\level5.png", "images\\level5Background.png"),
-    new MainGame("images\\test.png", "images\\testBackground.png")};
-    int level = 0;
+    new MainGame("images\\demo.png", "images\\demoBackground.png")};
+    int level = 7;
     static boolean levelTransition;
     int levelTransitionCounter;
     
@@ -189,7 +189,7 @@ public class Main extends JComponent implements KeyListener{
         }
         
         // restart thing
-        if (Character.toLowerCase(e.getKeyChar()) == 'r')
+        if (e.getKeyCode() == KeyEvent.VK_R)
         {
             if (!mainMenu && games[level].restartable)
             {
@@ -198,12 +198,12 @@ public class Main extends JComponent implements KeyListener{
         }
         if (r)
         {
-            if (Character.toLowerCase(e.getKeyChar()) == 'y')
+            if (e.getKeyCode() == KeyEvent.VK_Y)
             {
                 r = false;
                 games[level].initializeMap();
             }
-            if (Character.toLowerCase(e.getKeyChar()) == 'n')
+            if (e.getKeyCode() == KeyEvent.VK_N)
             {
                 r = false;
             }
@@ -212,7 +212,7 @@ public class Main extends JComponent implements KeyListener{
         {
             mainMenu = (mainMenu ? false: true);
         }
-        if (Character.toLowerCase(e.getKeyChar()) == 'q' && mainMenu)
+        if (e.getKeyCode() == KeyEvent.VK_Q && mainMenu)
         {
             done = true;
         }
